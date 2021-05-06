@@ -3,7 +3,7 @@ on:
   pull_request:
     branches:
       - main
-    types: [closed]
+    types: [closed, open]
 jobs:
   release:
     name: release
@@ -18,16 +18,17 @@ jobs:
         with:
           result-encoding: string
           script: |
-            console.log(github.ref, github.event.pull_request.ref)
-            const branchName = github.event.pull_request.ref
-            const releaseVersion = branchName.replace('refs/heads/release/', 'v')
-            console.log(branchName, releaseVersion)
-            return releaseVersion
+            console.log(github.ref)
+            console.log(github.event.pull_request)
+            # const branchName = github.event.pull_request.ref
+            # const releaseVersion = branchName.replace('refs/heads/release/', 'v')
+            # console.log(branchName, releaseVersion)
+            # return releaseVersion
       - name: Create Release
         id: create_release
         uses: softprops/action-gh-release@v1
         with:
-          name: ${{ steps.return_release_version.outputs.result }}
+          name: ${{ github.event.pull_request.ref }}
           body: ${{ github.event.pull_request.body }}
           draft: false
           prerelease: false
