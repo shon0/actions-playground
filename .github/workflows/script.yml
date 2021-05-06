@@ -6,10 +6,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: actions/github-script@v4
-        result-encoding: string
-        debug: true
-        github-token: ${{secrets.GITHUB_TOKEN}}
         with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          debug: true
+          result-encoding: string
           script: |
             console.log('CONTEXT', context)
             console.log('GITHUB', github)
