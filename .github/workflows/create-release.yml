@@ -18,10 +18,10 @@ jobs:
         uses: actions/github-script@v2
         id: return_release_version
         with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
           result-encoding: string
           script: |
-            console.log(github.head_ref)
-            console.log(github.event)
+            console.log(github)
             const branchName = github.head_ref
             const releaseVersion = branchName.replace('refs/heads/release/', 'v')
             console.log(branchName, releaseVersion)
