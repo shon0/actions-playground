@@ -2,7 +2,7 @@ name: リリースの自動作成
 on:
   push:
     branches:
-      - "release/**"
+      - "release/*"
 jobs:
   release:
     name: release
