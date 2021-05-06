@@ -1,13 +1,14 @@
 name: リリースの自動作成
 on:
   pull_request:
-    types: [opened]
     branches:
       - main
+    types: [closed]
 jobs:
   auto_release:
     name: auto_release
     runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
     steps:
       - name: Checkout code
         uses: actions/checkout@master
@@ -20,5 +21,5 @@ jobs:
           tag_name: ${{ github.event.pull_request.title }}
           release_name: ${{ github.event.pull_request.title }}
           body: ${{ github.event.pull_request.body }}
-          draft: true
+          draft: false
           prerelease: false
