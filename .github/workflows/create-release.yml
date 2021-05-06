@@ -3,10 +3,6 @@ on:
   push:
     branches:
       - "release/**"
-  pull_request:
-    branches:
-      - main
-    types: [closed, opened]
 jobs:
   release:
     name: release
