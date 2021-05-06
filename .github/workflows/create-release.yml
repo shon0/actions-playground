@@ -1,9 +1,12 @@
 name: リリースの自動作成
 on:
+  push:
+    branches:
+      - "release/**"
   pull_request:
     branches:
       - main
-    types: [open, closed]
+    types: [closed, opened]
 jobs:
   release:
     name: release
@@ -18,8 +21,12 @@ jobs:
         with:
           result-encoding: string
           script: |
-            console.log(github.ref)
-            console.log(github.event.pull_request)
+            console.log(github.head_ref)
+            console.log(github.event)
+            const branchName = github.head_ref
+            const releaseVersion = branchName.replace('refs/heads/release/', 'v')
+            console.log(branchName, releaseVersion)
+            return releaseVersion
       - name: Create Release
         id: create_release
         uses: softprops/action-gh-release@v1
