@@ -17,6 +17,7 @@ jobs:
         id: return_release_version
         with:
           result-encoding: string
+          debug: true
           script: |
             const branchName = github.ref
             console.log(branchName, branchName.replace('release/', ''))

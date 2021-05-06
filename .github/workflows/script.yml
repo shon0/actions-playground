@@ -1,0 +1,21 @@
+on: push
+
+jobs:
+  try:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/github-script@v4
+        result-encoding: string
+        debug: true
+        github-token: ${{secrets.GITHUB_TOKEN}}
+        with:
+          script: |
+            console.log('CONTEXT', context)
+            console.log('GITHUB', github)
+            const branchName = 'release/2.0.0'
+            const releaseVersion = branchName.replace('release/', 'v')
+            console.log(branchName, releaseVersion)
+            return releaseVersion
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
