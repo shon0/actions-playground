@@ -1,11 +1,16 @@
 name: リリースの自動作成
 on:
   push:
+    branches:
+      - "release/**"
+  pull_request:
+    branches:
+      - main
+    types: [closed, opened]
 jobs:
   release:
     name: release
     runs-on: ubuntu-latest
-    if: github.event.pull_request.merged == true
     steps:
       - name: Checkout code
         uses: actions/checkout@master
