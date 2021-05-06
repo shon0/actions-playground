@@ -1,14 +1,12 @@
+name: リリースの自動作成
 on:
   pull_request:
     types: [opened]
     branches:
       - main
-
-name: Create Release
-
 jobs:
-  build:
-    name: Create Release
+  auto_release:
+    name: auto_release
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
