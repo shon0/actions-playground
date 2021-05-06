@@ -17,10 +17,12 @@ jobs:
         id: return_release_version
         with:
           result-encoding: string
+          debug: true
           script: |
-            const branchName = github.ref
-            console.log(branchName, branchName.replace('release/', ''))
-            return `v${branchName.replace('release/', '')}`
+            const branchName = context.ref
+            const releaseVersion = branchName.replace('refs/heads/release/', 'v')
+            console.log(branchName, releaseVersion)
+            return releaseVersion
       - name: Create Release
         id: create_release
         uses: softprops/action-gh-release@v1
