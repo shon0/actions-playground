@@ -11,9 +11,9 @@ jobs:
           debug: true
           result-encoding: string
           script: |
-            console.log('CONTEXT', context)
-            console.log('GITHUB', github)
-            const branchName = 'release/2.0.0'
+            console.log('context.ref', context.ref)
+            console.log('github.ref', github.ref)
+            const branchName = context.ref
             const releaseVersion = branchName.replace('release/', 'v')
             console.log(branchName, releaseVersion)
             return releaseVersion
