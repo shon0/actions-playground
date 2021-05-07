@@ -9,13 +9,15 @@ jobs:
     name: pull request to develop
     runs-on: ubuntu-latest
     if: github.event.pull_request.merged == true
-
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@master
+        with:
+          ref: ${{github.event.pull_request.head.ref}}
   create-release:
     name: Add tag and create github release
     runs-on: ubuntu-latest
     if: github.event.pull_request.merged == true
-    outputs:
-      version: ${{ steps.release_version.outputs.version }}
     steps:
       - name: Checkout code
         uses: actions/checkout@master
