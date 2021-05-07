@@ -1,0 +1,39 @@
+name: Release
+on:
+  pull_request:
+    branches:
+      - main
+    types: [closed]
+jobs:
+  pull-request-to-develop:
+    name: pull request to develop
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
+
+  create-release:
+    name: Add tag and create github release
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
+    outputs:
+      version: ${{ steps.release_version.outputs.version }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@master
+        with:
+          ref: ${{github.event.pull_request.head.ref}}
+      - name: Return release version
+        id: release_version
+        run: | 
+          VERSION=${GITHUB_REF##*/}
+          echo "::set-output name=version::$VERSION"
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.release_version.outputs.version }}
+          name: ${{ steps.release_version.outputs.version }}
+          body: ${{ github.event.pull_request.body }}
+          draft: false
+          prerelease: false
