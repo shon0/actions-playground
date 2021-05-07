@@ -21,7 +21,6 @@ jobs:
       - name: Return release version
         id: release_version
         run: | 
-          echo ${GITHUB_REF}
           VERSION=${GITHUB_REF##*/}
           echo "::set-output name=version::$VERSION"
       - name: Create Release
@@ -30,8 +29,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ needs.create-release.outputs.version }}
-          release_name: ${{ needs.create-release.outputs.version }}
+          tag_name: ${{ steps.release_version.outputs.version }}
+          release_name: ${{ steps.release_version.outputs.version }}
           body: ${{ github.event.pull_request.body }}
           draft: false
           prerelease: false
