@@ -12,8 +12,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@master
-        with:
-          ref: ${{github.event.pull_request.head.ref}}
   create-release:
     name: Add tag and create github release
     runs-on: ubuntu-latest
@@ -21,12 +19,12 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@master
-        with:
-          ref: ${{github.event.pull_request.head.ref}}
       - name: Return release version
         id: release_version
+        env:
+          RELEASE_REF: ${{github.event.pull_request.head.ref}}
         run: | 
-          VERSION=${GITHUB_REF##*/}
+          VERSION=${RELEASE_REF##*/}
           echo "::set-output name=version::$VERSION"
       - name: Create Release
         id: create_release
