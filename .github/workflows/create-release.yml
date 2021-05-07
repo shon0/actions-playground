@@ -11,14 +11,14 @@ jobs:
   release:
     name: release
     runs-on: ubuntu-latest
-    outputs:
-      version_number: ${{ steps.release_version.outputs.version_number }}
     steps:
       - name: Checkout code
         uses: actions/checkout@master
       - name: Return release version
         id: release_version
-        run: echo "::set-output name=version_number::${github.event.pull_request.ref##*/}"
+        run: | 
+          VERSION = ${github.event.pull_request.ref##*/}
+          echo "::set-output name=version_number::$VERSION"
       - name: Create Release
         id: create_release
         uses: softprops/action-gh-release@v1
