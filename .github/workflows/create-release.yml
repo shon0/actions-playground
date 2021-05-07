@@ -1,32 +1,34 @@
 name: リリースの自動作成
 on:
+  push:
+    branches:
+      - "release/**"
   pull_request:
     branches:
       - main
-    types: [open, closed]
+    types: [closed, opened]
 jobs:
   release:
     name: release
     runs-on: ubuntu-latest
-    if: github.event.pull_request.merged == true
     steps:
       - name: Checkout code
         uses: actions/checkout@master
       - name: Return release version
-        uses: actions/github-script@v2
-        id: return_release_version
-        with:
-          result-encoding: string
-          script: |
-            console.log(github.ref)
-            console.log(github.event.pull_request)
+        id: release_version
+        env:
+          REF: ${{ github.event.pull_request.ref }}
+        run: | 
+          VERSION=${REF##*/}
+          echo "::set-output name=version_number::$VERSION"
       - name: Create Release
         id: create_release
-        uses: softprops/action-gh-release@v1
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          name: ${{ github.event.pull_request.ref }}
+          tag_name: ${{ steps.release_version.outputs.version_number }}
+          release_name: ${{ steps.release_version.outputs.version_number }}
           body: ${{ github.event.pull_request.body }}
           draft: false
           prerelease: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
