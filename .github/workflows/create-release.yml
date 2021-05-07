@@ -23,9 +23,9 @@ jobs:
           echo "::set-output name=version_number::$VERSION"
       - name: Create Release
         id: create_release
-        uses: softprops/action-gh-release@v1
+        uses: ncipollo/release-action@v1
         with:
-          tag_name: ${{ steps.release_version.outputs.version_number }}
+          tag: ${{ steps.release_version.outputs.version_number }}
           name: ${{ steps.release_version.outputs.version_number }}
           body: ${{ github.event.pull_request.body }}
           draft: false
