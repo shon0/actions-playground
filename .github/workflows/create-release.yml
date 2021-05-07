@@ -16,8 +16,10 @@ jobs:
         uses: actions/checkout@master
       - name: Return release version
         id: release_version
+        env:
+          REF: ${{ github.event.pull_request.ref }}
         run: | 
-          VERSION = ${github.event.pull_request.ref##*/}
+          VERSION=${REF##*/}
           echo "::set-output name=version_number::$VERSION"
       - name: Create Release
         id: create_release
