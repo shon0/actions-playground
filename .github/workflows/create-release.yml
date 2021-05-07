@@ -8,7 +8,7 @@ on:
       - main
     types: [closed, opened]
 jobs:
-  release:
+  create-release:
     name: release
     runs-on: ubuntu-latest
     outputs:
@@ -29,8 +29,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ needs.release.outputs.version }}
-          release_name: ${{ needs.release.outputs.version }}
+          tag_name: ${{ needs.create-release.outputs.version }}
+          release_name: ${{ needs.create-release.outputs.version }}
           body: ${{ github.event.pull_request.body }}
           draft: false
           prerelease: false
