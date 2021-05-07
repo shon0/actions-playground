@@ -20,10 +20,9 @@ jobs:
           ref: ${{github.event.pull_request.head.ref}}
       - name: Return release version
         id: release_version
-        env:
-          REF: ${{ github.head_ref }}
         run: | 
-          VERSION=${REF##*/}
+          echo ${GITHUB_REF}
+          VERSION=${GITHUB_REF##*/}
           echo "::set-output name=version::$VERSION"
       - name: Create Release
         id: create_release
