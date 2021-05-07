@@ -11,6 +11,8 @@ jobs:
   release:
     name: release
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.release_version.outputs.version }}
     steps:
       - name: Checkout code
         uses: actions/checkout@master
@@ -20,15 +22,15 @@ jobs:
           REF: ${{ github.event.pull_request.ref }}
         run: | 
           VERSION=${REF##*/}
-          echo "::set-output name=version_number::$VERSION"
+          echo "::set-output name=version::$VERSION"
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ steps.release_version.outputs.version_number }}
-          release_name: ${{ steps.release_version.outputs.version_number }}
+          tag_name: ${{ needs.release.outputs.version }}
+          release_name: ${{ needs.release.outputs.version }}
           body: ${{ github.event.pull_request.body }}
           draft: false
           prerelease: false
