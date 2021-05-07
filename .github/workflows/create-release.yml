@@ -11,26 +11,20 @@ jobs:
   release:
     name: release
     runs-on: ubuntu-latest
+    outputs:
+      version_number: ${{ steps.release_version.outputs.version_number }}
     steps:
       - name: Checkout code
         uses: actions/checkout@master
       - name: Return release version
-        uses: actions/github-script@v2
-        id: return_release_version
-        with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
-          result-encoding: string
-          script: |
-            console.log(github)
-            const branchName = github.head_ref
-            const releaseVersion = branchName.replace('refs/heads/release/', 'v')
-            console.log(branchName, releaseVersion)
-            return releaseVersion
+        id: release_version
+        run: echo "::set-output name=version_number::${github.event.pull_request.ref##*/}"
       - name: Create Release
         id: create_release
         uses: softprops/action-gh-release@v1
         with:
-          name: ${{ github.event.pull_request.ref }}
+          tag_name: ${{ steps.release_version.outputs.version_number }}
+          name: ${{ steps.release_version.outputs.version_number }}
           body: ${{ github.event.pull_request.body }}
           draft: false
           prerelease: false
