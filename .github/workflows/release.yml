@@ -16,8 +16,8 @@ jobs:
         uses: peter-evans/create-pull-request@v3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ github.event.pull_request.head.ref }}
-          base: 'develop'
+          branch: 'develop'
+          base: ${{ github.event.pull_request.head.ref }}
           title: 'Merge release branch to develop'
           body: ${{ github.event.pull_request.body }}
   create-release:
@@ -32,7 +32,7 @@ jobs:
         env:
           RELEASE_REF: ${{ github.event.pull_request.head.ref }}
         run: | 
-          VERSION=${RELEASE_REF#refs/heads/release/}
+          VERSION=${RELEASE_REF##refs/heads}
           echo "::set-output name=version::$VERSION"
       - name: Create Release
         id: create_release
