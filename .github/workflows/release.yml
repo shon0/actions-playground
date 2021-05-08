@@ -40,7 +40,7 @@ jobs:
         id: release_version
         env:
           RELEASE_REF: ${{ github.event.pull_request.head.ref }}
-        run: echo ::set-output name=version::${RELEASE_REF#refs/heads/release/}
+        run: echo ::set-output name=version::${RELEASE_REF#release/}
       - name: Create Release
         id: create_release
         uses: softprops/action-gh-release@v1
