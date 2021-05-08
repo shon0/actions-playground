@@ -13,13 +13,22 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@master
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v3
+        uses: actions/github-script@v4
+        env:
+          BRANCH: ${{ github.head_ref }}
+          BODY: ${{ github.event.pull_request.body }}
+          VERSION: ${{ steps.release_version.outputs.version }}
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ github.event.pull_request.head.ref }}
-          base: 'develop'
-          title: 'Merge release branch to develop'
-          body: ${{ github.event.pull_request.body }}
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            github.pulls.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `Merge ${process.env.BRANCH} to develop`,
+              body: process.env.BODY,
+              head: process.env.BRANCH,
+              base: "develop"
+            });
   create-release:
     name: Add tag and create github release
     runs-on: ubuntu-latest
@@ -31,9 +40,7 @@ jobs:
         id: release_version
         env:
           RELEASE_REF: ${{ github.event.pull_request.head.ref }}
-        run: | 
-          VERSION=${RELEASE_REF#refs/heads/release/}
-          echo "::set-output name=version::$VERSION"
+        run: echo ::set-output name=version::${RELEASE_REF#refs/heads/release/}
       - name: Create Release
         id: create_release
         uses: softprops/action-gh-release@v1
