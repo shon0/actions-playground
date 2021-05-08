@@ -12,16 +12,16 @@ jobs:
         id: extract_branch
         run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
       - name: Create Pull Request
-          with:
-            github-token: ${{secrets.GITHUB_TOKEN}}
-            env:
-              BRANCH: ${{ steps.extract_branch.outputs.branch }}
-            script: |
-              github.pulls.create({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                title: `CIからPRを作成`,
-                body: `テスト`,
-                head: process.env.BRANCH,
-                base: "develop"
-              });
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          env:
+            BRANCH: ${{ steps.extract_branch.outputs.branch }}
+          script: |
+            github.pulls.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `CIからPRを作成`,
+              body: `テスト`,
+              head: process.env.BRANCH,
+              base: "develop"
+            });
