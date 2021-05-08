@@ -16,7 +16,7 @@ jobs:
         uses: peter-evans/create-pull-request@v3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${ GITHUB_REF#refs/heads/ }
+          branch: ${{ github.event.pull_request.head.ref }}
           base: 'develop'
           body: ${{ github.event.pull_request.body }}
   create-release:
